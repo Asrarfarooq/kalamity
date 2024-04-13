@@ -3,9 +3,11 @@ import "./App.css";
 import MapWithDisasters from "./components/MapWithDisasters";
 import Chatbot from "./components/Chatbot";
 import DistressColumn from "./components/DistressColumn";
+import EmergencyNavigation from "./components/EmergencyNavigation"; // Import the new component
 
 const App = () => {
   const [apiLoaded, setApiLoaded] = useState(false);
+  const [emergencyNavigation, setEmergencyNavigation] = useState(false);
 
   useEffect(() => {
     const loadGoogleMaps = () => {
@@ -13,7 +15,6 @@ const App = () => {
         setApiLoaded(true);
         return;
       }
-
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places,geometry`;
       script.async = true;
@@ -21,15 +22,21 @@ const App = () => {
       script.onload = () => setApiLoaded(true);
       document.body.appendChild(script);
     };
-
     loadGoogleMaps();
   }, []);
+
+  const handleHelpClick = () => {
+    setEmergencyNavigation(true);
+  };
 
   return (
     <div className="App">
       <header className="App-header">
         <div className="logo">ClamiAlert</div>
-        <button className="help-button">Help</button>
+        <button className="help-button" onClick={handleHelpClick}>
+          Help
+        </button>
+        {emergencyNavigation && <EmergencyNavigation />}
       </header>
       <div className="content">
         <div className="map-container">
