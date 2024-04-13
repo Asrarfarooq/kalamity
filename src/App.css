@@ -73,6 +73,15 @@
   border-radius: 8px;
   color: white;
 }
+/* App.css */
+.locate-button {
+  background: #fff;
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+}
 
 .lower-content {
   display: flex;

@@ -14,7 +14,6 @@ function App() {
           <div className="map" id="map">
             <MapWithDisasters />
           </div>
-          <div className="key-info">Key info</div>
         </div>
         <div className="resources-filter">Resources</div>
       </div>
