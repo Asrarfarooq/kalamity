@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import MapWithDisasters from "./components/MapWithDisasters";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className="logo">Logo</div>
+        <button className="help-button">Help</button>
       </header>
+      <div className="content">
+        <div className="map-container">
+          <div className="map" id="map">
+            <MapWithDisasters />
+          </div>
+          <div className="key-info">Key info</div>
+        </div>
+        <div className="resources-filter">Resources</div>
+      </div>
+      <div className="lower-content">
+        <div className="chatbot-container">
+          ChatBot Tuned For Disaster Preparedness
+        </div>
+        <div className="distress-column">
+          <button className="emergency-call">Emergency Call</button>
+          <button className="distress-signal">Send Distress Signal</button>
+        </div>
+      </div>
     </div>
   );
 }
