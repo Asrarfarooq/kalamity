@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import MapWithDisasters from "./components/MapWithDisasters";
 import Chatbot from "./components/Chatbot";
+import DistressColumn from "./components/DistressColumn";
 
-function App() {
+const App = () => {
+  const [apiLoaded, setApiLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadGoogleMaps = () => {
+      if (window.google && window.google.maps) {
+        setApiLoaded(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places,geometry`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => setApiLoaded(true);
+      document.body.appendChild(script);
+    };
+
+    loadGoogleMaps();
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -12,9 +33,11 @@ function App() {
       </header>
       <div className="content">
         <div className="map-container">
-          <div className="map" id="map">
-            <MapWithDisasters />
-          </div>
+          {apiLoaded && (
+            <div className="map" id="map">
+              <MapWithDisasters />
+            </div>
+          )}
         </div>
         <div className="resources-filter">Resources</div>
       </div>
@@ -22,13 +45,10 @@ function App() {
         <div className="chatbot-container">
           <Chatbot />
         </div>
-        <div className="distress-column">
-          <button className="emergency-call">Emergency Call</button>
-          <button className="distress-signal">Send Distress Signal</button>
-        </div>
+        <div className="distress-column">{apiLoaded && <DistressColumn />}</div>
       </div>
     </div>
   );
-}
+};
 
 export default App;

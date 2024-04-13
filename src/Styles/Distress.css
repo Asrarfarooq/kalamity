@@ -1,0 +1,53 @@
+/* ... other styles ... */
+
+.distress-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center buttons horizontally */
+  justify-content: center; /* Center buttons vertically if there's space */
+  padding: 20px;
+  gap: 10px; /* Add space between buttons */
+}
+
+.emergency-call,
+.distress-signal {
+  width: 100%; /* Make buttons full-width in the column */
+  max-width: 200px; /* Adjust max-width as needed */
+  padding: 15px;
+  font-size: 18px; /* Adjust font size as needed */
+  border: none;
+  border-radius: 25px; /* Rounded edges */
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth background color transition for hover effect */
+}
+
+.emergency-call {
+  background-color: #d32f2f; /* Red for emergency call */
+  color: white;
+}
+
+.distress-signal {
+  background-color: #ff9800; /* Orange for distress signal */
+  color: white;
+}
+
+/* Hover effects */
+.emergency-call:hover,
+.distress-signal:hover {
+  background-color: #a02828; /* Darken color on hover for emergency call */
+}
+
+/* Focus styles for accessibility */
+.emergency-call:focus,
+.distress-signal:focus {
+  outline: 2px solid #fff; /* White outline for focus */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .emergency-call,
+  .distress-signal {
+    width: 90%; /* Full-width on smaller screens */
+    font-size: 16px; /* Adjust font size as needed */
+  }
+}
