@@ -6,25 +6,72 @@ const MapWithDisasters = () => {
   const googleMap = useRef(null);
   const userMarkerRef = useRef(null);
 
-  // Function to fetch and plot disasters
-  const fetchDisasters = async () => {
+  // Function to calculate the distance between two coordinates in kilometers
+
+  // Function to fetch and plot disasters from EONET and recent earthquakes from USGS
+  const fetchDisastersAndEarthquakes = async () => {
     try {
-      const response = await axios.get(
-        "https://eonet.gsfc.nasa.gov/api/v3/events/geojson"
-      );
-      const features = response.data.features;
-      features.forEach((feature) => {
+      const [eonetResponse, usgsResponse] = await Promise.all([
+        axios.get("https://eonet.gsfc.nasa.gov/api/v3/events/geojson"),
+        axios.get(
+          "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson"
+        ),
+      ]);
+
+      // Process EONET disasters
+      eonetResponse.data.features.forEach((feature) => {
         const coords = feature.geometry.coordinates;
         const latLng = new window.google.maps.LatLng(coords[1], coords[0]);
+        const date = new Date(feature.properties.date).toLocaleString();
 
         const marker = new window.google.maps.Marker({
           position: latLng,
           map: googleMap.current,
           title: feature.properties.title,
+          icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Custom icon for disaster
         });
 
         const infowindow = new window.google.maps.InfoWindow({
-          content: `<div><strong>${feature.properties.title}</strong><p>Type: ${feature.properties.categories[0].title}</p></div>`,
+          content: `
+            <div>
+              <strong>${feature.properties.title}</strong>
+              <p>Type: ${feature.properties.categories[0].title}</p>
+              <p>Date: ${date}</p>
+            </div>
+          `,
+        });
+
+        marker.addListener("click", () => {
+          infowindow.open({
+            anchor: marker,
+            map: googleMap.current,
+            shouldFocus: false,
+          });
+        });
+      });
+
+      // Process USGS earthquakes
+      usgsResponse.data.features.forEach((earthquake) => {
+        const coords = earthquake.geometry.coordinates;
+        const latLng = new window.google.maps.LatLng(coords[1], coords[0]);
+        const magnitude = earthquake.properties.mag;
+        const time = new Date(earthquake.properties.time).toLocaleString();
+
+        const marker = new window.google.maps.Marker({
+          position: latLng,
+          map: googleMap.current,
+          title: `Earthquake: ${magnitude}`,
+          icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Custom icon for earthquake
+        });
+
+        const infowindow = new window.google.maps.InfoWindow({
+          content: `
+            <div>
+              <strong>Earthquake</strong>
+              <p>Magnitude: ${magnitude}</p>
+              <p>Time: ${time}</p>
+            </div>
+          `,
         });
 
         marker.addListener("click", () => {
@@ -67,7 +114,7 @@ const MapWithDisasters = () => {
                 position: userLocation,
                 map: googleMap.current,
                 title: "Your Location",
-                icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Custom icon for user location
+                icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Custom icon for user location
               });
             }
 
@@ -81,13 +128,13 @@ const MapWithDisasters = () => {
         );
       }
 
-      // Fetch and plot the disasters on the map
-      fetchDisasters();
+      // Fetch and plot the disasters and earthquakes on the map
+      fetchDisastersAndEarthquakes();
     };
 
     // Load the Google Maps script dynamically
     const googleMapsScript = document.createElement("script");
-    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&callback=initMap`;
+    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=geometry&callback=initMap`;
     googleMapsScript.async = true;
     googleMapsScript.defer = true;
     window.document.body.appendChild(googleMapsScript);
