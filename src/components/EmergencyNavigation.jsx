@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../Styles/EmergencyNavigation.css"; // Assuming you store your styles in this CSS file
 
 const EmergencyNavigation = () => {
-  const [userLocation, setUserLocation] = useState(null);
-  const [shelter, setShelter] = useState(null);
+  const [userLocation, setUserLocation] = useState(null); // eslint-disable-line no-unused-vars
+  const [shelter, setShelter] = useState(null); // eslint-disable-line no-unused-vars
+
   const [map, setMap] = useState(null);
 
   useEffect(() => {
