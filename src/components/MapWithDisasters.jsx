@@ -4,9 +4,9 @@ import axios from "axios";
 const MapWithDisasters = () => {
   const googleMapRef = useRef(null);
   const googleMap = useRef(null);
-  const userLocationRef = useRef(null);
   const userMarkerRef = useRef(null);
 
+  // Function to fetch and plot disasters
   const fetchDisasters = async () => {
     try {
       const response = await axios.get(
@@ -40,43 +40,29 @@ const MapWithDisasters = () => {
     }
   };
 
-  const initMap = () => {
-    const defaultLocation = { lat: -34.397, lng: 150.644 };
-    googleMap.current = new window.google.maps.Map(googleMapRef.current, {
-      zoom: 2,
-      center: defaultLocation,
-    });
-
-    fetchDisasters(); // Fetch and display disasters
-  };
-
   useEffect(() => {
-    const googleMapsScript = document.createElement("script");
-    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
-    googleMapsScript.async = true;
-    window.document.body.appendChild(googleMapsScript);
+    // Define the initMap function within useEffect
+    const initMap = () => {
+      const defaultLocation = { lat: -34.397, lng: 150.644 };
+      googleMap.current = new window.google.maps.Map(googleMapRef.current, {
+        zoom: 2,
+        center: defaultLocation,
+      });
 
-    googleMapsScript.addEventListener("load", () => {
-      initMap();
-
-      // Request the user's location
+      // Attempt to get the user's current position and place a marker
       if (navigator.geolocation) {
-        const watchId = navigator.geolocation.watchPosition(
+        navigator.geolocation.getCurrentPosition(
           (position) => {
             const userLocation = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            userLocationRef.current = userLocation;
-
-            googleMap.current.setCenter(userLocation);
-            googleMap.current.setZoom(8); // Zoom in closer
 
             // If a marker already exists, update its position
             if (userMarkerRef.current) {
               userMarkerRef.current.setPosition(userLocation);
             } else {
-              // Otherwise, create a new marker
+              // Otherwise, create a new marker for the user's location
               userMarkerRef.current = new window.google.maps.Marker({
                 position: userLocation,
                 map: googleMap.current,
@@ -84,20 +70,37 @@ const MapWithDisasters = () => {
                 icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png", // Custom icon for user location
               });
             }
+
+            // Center the map on the user's location
+            googleMap.current.setCenter(userLocation);
+            googleMap.current.setZoom(8); // Zoom in closer
           },
           (error) => {
             console.error("Geolocation error:", error);
           }
         );
-
-        // Stop watching the user's location when the component unmounts
-        return () => {
-          navigator.geolocation.clearWatch(watchId);
-        };
       }
-    });
 
+      // Fetch and plot the disasters on the map
+      fetchDisasters();
+    };
+
+    // Load the Google Maps script dynamically
+    const googleMapsScript = document.createElement("script");
+    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&callback=initMap`;
+    googleMapsScript.async = true;
+    googleMapsScript.defer = true;
+    window.document.body.appendChild(googleMapsScript);
+
+    // Assign the initMap function to the window object
+    window.initMap = initMap;
+
+    // Clean up the script on component unmount
     return () => {
+      window.initMap = undefined;
+      if (googleMapsScript.parentNode) {
+        googleMapsScript.parentNode.removeChild(googleMapsScript);
+      }
       if (googleMap.current) {
         googleMap.current = null;
       }

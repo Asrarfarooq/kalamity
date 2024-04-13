@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
 import MapWithDisasters from "./components/MapWithDisasters";
+import Chatbot from "./components/Chatbot";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="logo">Logo</div>
+        <div className="logo">ClamiAlert</div>
         <button className="help-button">Help</button>
       </header>
       <div className="content">
@@ -19,7 +20,7 @@ function App() {
       </div>
       <div className="lower-content">
         <div className="chatbot-container">
-          ChatBot Tuned For Disaster Preparedness
+          <Chatbot />
         </div>
         <div className="distress-column">
           <button className="emergency-call">Emergency Call</button>
