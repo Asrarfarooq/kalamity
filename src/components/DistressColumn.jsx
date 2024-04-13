@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const DistressColumn = () => {
   const [nearestPoliceStation, setNearestPoliceStation] = useState(null);
-  const [map, setMap] = useState(null);
   const [placeService, setPlaceService] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
 
@@ -24,7 +23,6 @@ const DistressColumn = () => {
           center: location,
           zoom: 15,
         });
-        setMap(map);
         const places = new window.google.maps.places.PlacesService(map);
         setPlaceService(places);
       },
@@ -36,7 +34,6 @@ const DistressColumn = () => {
           center: defaultLocation,
           zoom: 15,
         });
-        setMap(map);
         const places = new window.google.maps.places.PlacesService(map);
         setPlaceService(places);
       }
@@ -53,7 +50,6 @@ const DistressColumn = () => {
         radius: 5000,
         type: ["police"],
       };
-
       placeService.nearbySearch(request, (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
           if (results.length > 0) {
