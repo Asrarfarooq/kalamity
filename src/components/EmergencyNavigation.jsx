@@ -38,8 +38,8 @@ const EmergencyNavigation = () => {
       const placesService = new window.google.maps.places.PlacesService(map);
       const request = {
         location: new window.google.maps.LatLng(location.lat, location.lng),
-        radius: 10000, // Search within 10 kilometers
-        type: ["shelter"],
+        radius: 5000, // Search within 5 kilometers
+        type: ["disaster shelters near me"],
       };
 
       placesService.nearbySearch(request, (results, status) => {
@@ -59,7 +59,7 @@ const EmergencyNavigation = () => {
 
   const confirmNavigation = (userLocation, shelter) => {
     const confirmResult = window.confirm(
-      "Do you want to start navigation to the nearest shelter?"
+      "Do you want to start navigation to the nearest disaster shelter?"
     );
     if (confirmResult) {
       startNavigation(userLocation, shelter);
