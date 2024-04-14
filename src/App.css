@@ -140,10 +140,8 @@
     margin-bottom: 10px;
   }
 
-  .map-container,
   .resources-filter,
-  .chatbot-container,
-  .distress-column {
+  .chatbot-container {
     flex: 1;
   }
 
