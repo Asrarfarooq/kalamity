@@ -64,6 +64,10 @@
   color: #212121;
   overflow-y: auto; /* Makes it scrollable */
 }
+/* Align text in messages to the left */
+.cs-message__content {
+  text-align: left !important;
+}
 
 .modal {
   position: fixed;

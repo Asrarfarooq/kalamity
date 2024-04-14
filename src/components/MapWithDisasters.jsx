@@ -30,7 +30,7 @@ const MapWithDisasters = () => {
                 position: userLocation,
                 map: googleMap,
                 title: "Your Location",
-                icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                icon: "https://i.postimg.cc/t40NJ0qm/bluedot.png",
               });
             }
           },
@@ -56,35 +56,53 @@ const MapWithDisasters = () => {
         ),
       ]);
 
+      const sixtyDaysAgo = new Date();
+      sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 180);
+
       eonetResponse.data.features.forEach((feature) => {
-        const coords = feature.geometry.coordinates;
-        const latLng = new window.google.maps.LatLng(coords[1], coords[0]);
-        const date = new Date(feature.properties.date).toLocaleString();
+        const eventDate = new Date(feature.properties.date);
+        if (eventDate >= sixtyDaysAgo) {
+          const coords = feature.geometry.coordinates;
+          const latLng = new window.google.maps.LatLng(coords[1], coords[0]);
+          const date = eventDate.toLocaleString();
+          const type = feature.properties.categories[0].title.toLowerCase();
 
-        const marker = new window.google.maps.Marker({
-          position: latLng,
-          map: googleMap,
-          title: feature.properties.title,
-          icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-        });
+          const icons = {
+            wildfires: "https://i.ibb.co/9yMs5Bs/wildfire-1.png",
+            "sea and lake ice": "https://i.ibb.co/MDv0nQp/iceberg-1.png", // Correct usage with quotation marks
+            earthquakes: "https://i.postimg.cc/4dZfwQ61/earthquake.png",
+            volcanoes: "https://i.ibb.co/hXfPZp9/Volcano-1.png",
+            "severe storms": "https://i.ibb.co/vkwdXJm/storm-1.png", // Correct usage with quotation marks
+            default: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Default icon
+          };
 
-        const infowindow = new window.google.maps.InfoWindow({
-          content: `
-            <div>
-              <strong>${feature.properties.title}</strong>
-              <p>Type: ${feature.properties.categories[0].title}</p>
-              <p>Date: ${date}</p>
-            </div>
-          `,
-        });
+          const iconUrl = icons[type] || icons.default;
 
-        marker.addListener("click", () => {
-          infowindow.open({
-            anchor: marker,
+          const marker = new window.google.maps.Marker({
+            position: latLng,
             map: googleMap,
-            shouldFocus: false,
+            title: feature.properties.title,
+            icon: iconUrl,
           });
-        });
+
+          const infowindow = new window.google.maps.InfoWindow({
+            content: `
+              <div>
+                <strong>${feature.properties.title}</strong>
+                <p>Type: ${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+                <p>Date: ${date}</p>
+              </div>
+            `,
+          });
+
+          marker.addListener("click", () => {
+            infowindow.open({
+              anchor: marker,
+              map: googleMap,
+              shouldFocus: false,
+            });
+          });
+        }
       });
 
       usgsResponse.data.features.forEach((earthquake) => {
@@ -97,7 +115,7 @@ const MapWithDisasters = () => {
           position: latLng,
           map: googleMap,
           title: `Earthquake: ${magnitude}`,
-          icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+          icon: "https://i.postimg.cc/4dZfwQ61/earthquake.png",
         });
 
         const infowindow = new window.google.maps.InfoWindow({
