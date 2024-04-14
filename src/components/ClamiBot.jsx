@@ -10,18 +10,16 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 
-const API_KEY = "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"; // Use your actual API key
-
 const systemMessage = {
   role: "system",
   content:
-    "My name is ClamiBot, I am designed to help with disaster management, preparedness, and response. Ask me anything related to these topics. I can give steps to take during a disaster, provide emergency contact information, and more.",
+    "My name is KalamBot, I am designed to help with disaster management, preparedness, and response. Ask me anything related to these topics. I can give steps to take during a disaster, provide emergency contact information, and more.",
 };
 
 function ClamiBot() {
   const [messages, setMessages] = useState([
     {
-      message: "Hey, this is ClamiBot! How can I help you today?",
+      message: "Hey, this is KalamBot! How can I help you today?",
       sentTime: "just now",
       sender: "ChatGPT",
       direction: "incoming",
@@ -57,7 +55,7 @@ function ClamiBot() {
     await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(apiRequestBody),
