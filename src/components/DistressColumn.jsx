@@ -50,6 +50,7 @@ const DistressColumn = () => {
         radius: 5000,
         type: ["police"],
       };
+
       placeService.nearbySearch(request, (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
           if (results.length > 0) {
@@ -73,12 +74,35 @@ const DistressColumn = () => {
     fetchNearestPoliceStation();
   };
 
+  // Define inline styles
+  const distressColumnStyle = {
+    padding: "20px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#f8f8f8",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  };
+
+  const buttonStyle = {
+    backgroundColor: "#f44336",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    padding: "10px 15px",
+    margin: "10px",
+    cursor: "pointer",
+    width: "80%", // Set a width to the buttons
+  };
+
   return (
-    <div className="distress-column" style={{ padding: "20px" }}>
-      <button className="button emergency-call" onClick={handleEmergencyCall}>
+    <div style={distressColumnStyle}>
+      <button style={buttonStyle} onClick={handleEmergencyCall}>
         Call Emergency Number
       </button>
-      <button className="button distress-signal" onClick={sendDistressSignal}>
+      <button style={buttonStyle} onClick={sendDistressSignal}>
         Send Distress Signal to Nearest Police
       </button>
       {nearestPoliceStation && (

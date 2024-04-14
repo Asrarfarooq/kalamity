@@ -1,13 +1,15 @@
-// app.js
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import "./App.css";
 import MapWithDisasters from "./components/MapWithDisasters";
+import ClamiBot from "./components/ClamiBot";
 import DistressColumn from "./components/DistressColumn";
 import EmergencyNavigation from "./components/EmergencyNavigation";
-import ClamiBot from "./components/ClamiBot"; // Import the new ClamiBot component
+import Resources from "./components/Resources";
 
 const App = () => {
   const [apiLoaded, setApiLoaded] = useState(false);
+  const [showDistressModal, setShowDistressModal] = useState(false);
   const [emergencyNavigation, setEmergencyNavigation] = useState(false);
 
   useEffect(() => {
@@ -30,26 +32,56 @@ const App = () => {
     setEmergencyNavigation(true);
   };
 
+  const handleDistressClick = () => {
+    setShowDistressModal(true);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="logo">ClamiAlert</div>
-        <button className="help-button" onClick={handleHelpClick}>
-          Help
-        </button>
-        {emergencyNavigation && <EmergencyNavigation />}
-      </header>
-      <div className="content">
-        <div className="map-container">{apiLoaded && <MapWithDisasters />}</div>
-        <div className="resources-filter">Resources</div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <div className="logo">Kalamity</div>
+          <div className="nav-buttons">
+            <button className="distress-button" onClick={handleDistressClick}>
+              Distress
+            </button>
+            <Link to="/resources" className="resources-button">
+              Resources
+            </Link>
+            <button className="help-button" onClick={handleHelpClick}>
+              Help
+            </button>
+          </div>
+          {emergencyNavigation && <EmergencyNavigation />}
+        </header>
+        <Routes>
+          <Route path="/resources" element={<Resources />} />
+          <Route
+            path="/"
+            element={
+              <div className="main-body">
+                {apiLoaded && (
+                  <>
+                    <div className="map-container">
+                      <MapWithDisasters />
+                    </div>
+                    <div className="chatbot-container">
+                      <ClamiBot />
+                    </div>
+                  </>
+                )}
+              </div>
+            }
+          />
+        </Routes>
+        {showDistressModal && (
+          <div className="modal">
+            <DistressColumn />
+            <button onClick={() => setShowDistressModal(false)}>Close</button>
+          </div>
+        )}
       </div>
-      <div className="lower-content">
-        <div className="chatbot-container">
-          <ClamiBot />
-        </div>
-        <div className="distress-column">{apiLoaded && <DistressColumn />}</div>
-      </div>
-    </div>
+    </Router>
   );
 };
 
