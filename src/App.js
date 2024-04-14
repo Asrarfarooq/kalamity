@@ -5,7 +5,7 @@ import MapWithDisasters from "./components/MapWithDisasters";
 import ClamiBot from "./components/ClamiBot";
 import DistressColumn from "./components/DistressColumn";
 import EmergencyNavigation from "./components/EmergencyNavigation";
-import Resources from "./components/Resources";
+import ResourceComponent from "./components/ResourceComponent"; // Import the new component
 
 const App = () => {
   const [apiLoaded, setApiLoaded] = useState(false);
@@ -40,12 +40,15 @@ const App = () => {
     <Router>
       <div className="App">
         <header className="App-header">
-          <div className="logo">Kalamity</div>
+          <Link to="/" className="logo">
+            Kalamity
+          </Link>{" "}
+          {/* Make logo a link to the homepage */}
           <div className="nav-buttons">
             <button className="distress-button" onClick={handleDistressClick}>
               Distress
             </button>
-            <Link to="/resources" className="resources-button">
+            <Link to="/Resources" className="resources-button">
               Resources
             </Link>
             <button className="help-button" onClick={handleHelpClick}>
@@ -55,7 +58,8 @@ const App = () => {
           {emergencyNavigation && <EmergencyNavigation />}
         </header>
         <Routes>
-          <Route path="/resources" element={<Resources />} />
+          <Route path="/Resources" element={<ResourceComponent />} />{" "}
+          {/* Updated to new component */}
           <Route
             path="/"
             element={

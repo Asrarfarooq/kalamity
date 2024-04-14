@@ -21,7 +21,7 @@ const MapWithDisasters = () => {
               lng: position.coords.longitude,
             };
             googleMap.setCenter(userLocation);
-            googleMap.setZoom(8); // Zoom in closer
+            googleMap.setZoom(16); // Zoom in closer
 
             if (userMarkerRef.current) {
               userMarkerRef.current.setPosition(userLocation);
