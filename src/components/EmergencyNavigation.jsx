@@ -9,7 +9,7 @@ const EmergencyNavigation = () => {
 
   useEffect(() => {
     const mapElement = document.createElement("div");
-    const defaultLocation = { lat: -34.397, lng: 150.644 };
+    const defaultLocation = { lat: 38.957, lng: -95.254 };
     const googleMap = new window.google.maps.Map(mapElement, {
       center: defaultLocation,
       zoom: 15,
@@ -39,7 +39,7 @@ const EmergencyNavigation = () => {
       const request = {
         location: new window.google.maps.LatLng(location.lat, location.lng),
         radius: 5000, // Search within 5 kilometers
-        type: ["disaster shelters near me"],
+        type: ["disaster shelters near me, disaster shelters, shelters"],
       };
 
       placesService.nearbySearch(request, (results, status) => {

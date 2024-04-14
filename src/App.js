@@ -1,9 +1,10 @@
+// app.js
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import MapWithDisasters from "./components/MapWithDisasters";
-import Chatbot from "./components/Chatbot";
 import DistressColumn from "./components/DistressColumn";
-import EmergencyNavigation from "./components/EmergencyNavigation"; // Import the new component
+import EmergencyNavigation from "./components/EmergencyNavigation";
+import ClamiBot from "./components/ClamiBot"; // Import the new ClamiBot component
 
 const App = () => {
   const [apiLoaded, setApiLoaded] = useState(false);
@@ -39,18 +40,12 @@ const App = () => {
         {emergencyNavigation && <EmergencyNavigation />}
       </header>
       <div className="content">
-        <div className="map-container">
-          {apiLoaded && (
-            <div className="map" id="map">
-              <MapWithDisasters />
-            </div>
-          )}
-        </div>
+        <div className="map-container">{apiLoaded && <MapWithDisasters />}</div>
         <div className="resources-filter">Resources</div>
       </div>
       <div className="lower-content">
         <div className="chatbot-container">
-          <Chatbot />
+          <ClamiBot />
         </div>
         <div className="distress-column">{apiLoaded && <DistressColumn />}</div>
       </div>
